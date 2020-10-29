@@ -19,6 +19,6 @@ public class AppTest {
 		ObjetoEnviarEmail email = new ObjetoEnviarEmail("REMETENTE ABC", "Assunto do Email",
 				sbTextEmail.toString());
 
-		email.enviarEmail(true);
+		email.enviarEmailAnexo(true);
 	}
 }
