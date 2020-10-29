@@ -15,11 +15,11 @@ import javax.mail.internet.MimeMessage;
 
 public class ObjetoEnviarEmail {
 
-	private String loginUsuario = "emailremetente@gmail.com";
+	private String loginUsuario = "remetente@gmail.com";
 	private String senhaUsuario = "senharemetente";
 
-	private List<String> listaDestinatarios = Arrays.asList("destinatario1@gmail.com"
-			, "destinatario2@yahoo.com.br");
+	private List<String> listaDestinatarios = Arrays.asList("destinatario1@gmail.com",
+			"destinatario2@yahoo.com.br");
 	private String nomeRemetente = "";
 	private String assuntoEmail = "";
 	private String textoEmail = "";
@@ -30,7 +30,7 @@ public class ObjetoEnviarEmail {
 		this.textoEmail = textoEmail;
 	}
 
-	public void enviarEmail() throws Exception {
+	public void enviarEmail(boolean envioHtml) throws Exception {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.connectiontimeout", "1000");
 		properties.put("mail.smtp.timeout", "5000");
@@ -52,20 +52,25 @@ public class ObjetoEnviarEmail {
 
 		int cont = 0;
 		for (String destino : listaDestinatarios) {
-		
-		Address[] toUser = InternetAddress.parse(destino);
 
-		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(loginUsuario, nomeRemetente));
-		message.setRecipients(Message.RecipientType.TO, toUser);
-		message.setSubject(assuntoEmail);
-		message.setText(textoEmail);
-		
-		cont++;
-		System.out.println("Enviando para destinatário " + cont);
-		Transport.send(message);
+			Address[] toUser = InternetAddress.parse(destino);
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(loginUsuario, nomeRemetente));
+			message.setRecipients(Message.RecipientType.TO, toUser);
+			message.setSubject(assuntoEmail);
+
+			if (envioHtml) {
+				message.setContent(textoEmail, "text/html; charset=utf-8");
+			} else {
+				message.setText(textoEmail);
+			}
+			
+			cont++;
+			System.out.println("Enviando para destinatário " + cont);
+			Transport.send(message);
 		}
-		System.out.println("Mensagens enviadas com sucesso!");
+		System.out.println("Envio finalizado!");
 
 	}
 
